@@ -84,7 +84,7 @@ catcmd(int argc, char *argv[])
 	int ch;
 	struct flock stdout_lock;
 
-	fpout = fdopen(output.fd, "w");
+	fpout = fdopen(dup(output.fd), "w");
 	if (fpout == NULL) {
 		sh_error("%s", strerror(errno));
 		return 2;
