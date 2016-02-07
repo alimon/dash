@@ -245,8 +245,8 @@ cook_buf(FILE *fp)
 			break;
 	}
 	if (ferror(fp)) {
-		warn("%s", filename);
-		rval = EXIT_FAILURE;
+		//warn("%s", filename);
+		//rval = EXIT_FAILURE;
 		clearerr(fp);
 	}
 	if (ferror(stdout))
