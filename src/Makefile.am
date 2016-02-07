@@ -22,7 +22,10 @@ dash_CFILES = \
 	alias.c arith_yacc.c arith_yylex.c cd.c error.c eval.c exec.c expand.c \
 	histedit.c input.c jobs.c mail.c main.c memalloc.c miscbltin.c \
 	mystring.c options.c parser.c redir.c show.c trap.c output.c \
-	bltin/printf.c system.c bltin/test.c bltin/times.c var.c
+	bltin/printf.c system.c bltin/test.c bltin/times.c var.c 
+if ENABLE_COREUTILS
+dash_CFILES := bltin/coreutils/rm.c
+endif
 dash_SOURCES = \
 	$(dash_CFILES) \
 	alias.h arith_yacc.h bltin/bltin.h cd.h error.h eval.h exec.h \

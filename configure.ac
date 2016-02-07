@@ -40,6 +40,14 @@ AC_ARG_ENABLE(fnmatch, AS_HELP_STRING(--enable-fnmatch, \
 				      [Use fnmatch(3) from libc]))
 AC_ARG_ENABLE(glob, AS_HELP_STRING(--enable-glob, [Use glob(3) from libc]))
 
+AC_ARG_ENABLE(coreutils, AS_HELP_STRING(--enable-coreutils, \
+				     [Build dash with coreutils builtin]))
+if test "$enable_coreutils" = "yes"; then
+	AC_DEFINE([ENABLE_COREUTILS], [1],
+		[Define if coreutils are provided])
+fi
+AM_CONDITIONAL([ENABLE_COREUTILS], [test x$enable_coreutils = xyes])
+
 dnl Checks for libraries.
 
 dnl Checks for header files.

@@ -296,18 +296,29 @@ find_command(char *name, struct cmdentry *entry, int act, const char *path)
 
 	/* If name contains a slash, don't use PATH or hash table */
 	if (strchr(name, '/') != NULL) {
-		entry->u.index = -1;
-		if (act & DO_ABS) {
-			while (stat64(name, &statb) < 0) {
-#ifdef SYSV
-				if (errno == EINTR)
-					continue;
+#ifdef ENABLE_COREUTILS
+		char bname_buf[PATH_MAX];
+		strncpy(bname_buf, name, PATH_MAX);
+		char *bname = basename(bname_buf);
+		if (cmdlookup(bname, 0) != NULL) {
+			name = bname;
+		} else {
 #endif
-				entry->cmdtype = CMDUNKNOWN;
-				return;
+			entry->u.index = -1;
+			if (act & DO_ABS) {
+				while (stat64(name, &statb) < 0) {
+#ifdef SYSV
+					if (errno == EINTR)
+						continue;
+#endif
+					entry->cmdtype = CMDUNKNOWN;
+					return;
+				}
 			}
+			entry->cmdtype = CMDNORMAL;
+#ifdef ENABLE_COREUTILS
 		}
-		entry->cmdtype = CMDNORMAL;
+#endif
 		return;
 	}
 

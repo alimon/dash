@@ -92,3 +92,7 @@ ulimitcmd	ulimit
 #endif
 testcmd		test [
 killcmd		-u kill
+
+#ifdef ENABLE_COREUTILS
+rmcmd		-u rm
+#endif
