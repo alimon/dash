@@ -172,9 +172,7 @@ cook_args(char **argv)
 			filename = *argv++;
 		}
 		cook_buf(fp);
-		if (fp != stdin)
-			(void)fclose(fp);
-		else
+		if (fp == stdin)
 			clearerr(fp);
 	} while (*argv);
 }
@@ -271,16 +269,6 @@ raw_args(char **argv)
 				fd = open(*argv, O_RDONLY|O_NONBLOCK, 0);
 				if (fd < 0)
 					goto skip;
-
-				if (fstat(fd, &st) == -1) {
-					close(fd);
-					goto skip;
-				}
-				if (!S_ISREG(st.st_mode)) {
-					close(fd);
-					warnx("%s: not a regular file", *argv);
-					goto skipnomsg;
-				}
 			}
 			else if ((fd = open(*argv, O_RDONLY, 0)) < 0) {
 skip:
@@ -295,8 +283,6 @@ skipnomsg:
 			err(EXIT_FAILURE, "stdin");
 		}
 		raw_cat(fd);
-		if (fd != fileno(stdin))
-			(void)close(fd);
 	} while (*argv);
 }
 
