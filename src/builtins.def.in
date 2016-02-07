@@ -94,5 +94,5 @@ testcmd		test [
 killcmd		-u kill
 
 #ifdef ENABLE_COREUTILS
-rmcmd		-u rm
+catcmd		-u cat
 #endif

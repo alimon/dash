@@ -24,7 +24,7 @@ dash_CFILES = \
 	mystring.c options.c parser.c redir.c show.c trap.c output.c \
 	bltin/printf.c system.c bltin/test.c bltin/times.c var.c 
 if ENABLE_COREUTILS
-dash_CFILES := bltin/coreutils/rm.c
+dash_CFILES := bltin/coreutils/cat.c
 endif
 dash_SOURCES = \
 	$(dash_CFILES) \
