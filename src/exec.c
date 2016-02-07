@@ -41,6 +41,8 @@
 #include <paths.h>
 #endif
 
+#include "config.h"
+
 /*
  * When commands are first encountered, they are entered in a hash table.
  * This ensures that a full path search will not have to be done for them
@@ -293,15 +295,20 @@ find_command(char *name, struct cmdentry *entry, int act, const char *path)
 	int e;
 	int updatetbl;
 	struct builtincmd *bcmd;
+#ifdef ENABLE_COREUTILS
+	char bname_buf[PATH_MAX];
+	char *bname = NULL;
+#endif
+
 
 	/* If name contains a slash, don't use PATH or hash table */
 	if (strchr(name, '/') != NULL) {
 #ifdef ENABLE_COREUTILS
-		char bname_buf[PATH_MAX];
 		strncpy(bname_buf, name, PATH_MAX);
-		char *bname = basename(bname_buf);
-		if (cmdlookup(bname, 0) != NULL) {
-			name = bname;
+		bname = basename(bname_buf);
+		bcmd = find_builtin(bname);
+		if (bcmd) {
+			goto builtin_test;
 		} else {
 #endif
 			entry->u.index = -1;
@@ -358,6 +365,7 @@ find_command(char *name, struct cmdentry *entry, int act, const char *path)
 
 	/* If %builtin not in path, check for builtin next */
 	bcmd = find_builtin(name);
+builtin_test:
 	if (bcmd && (bcmd->flags & BUILTIN_REGULAR || (
 		act & DO_ALTPATH ? !(act & DO_ALTBLTIN) : builtinloc <= 0
 	)))
