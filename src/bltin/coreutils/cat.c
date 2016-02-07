@@ -71,11 +71,24 @@ void cook_buf(FILE *);
 void raw_args(char *argv[]);
 void raw_cat(int);
 
+#include "output.h"
+extern struct output output;
+static FILE *fpout;
+
+#undef stdout
+#define stdout fpout
+
 int
 catcmd(int argc, char *argv[])
 {
 	int ch;
 	struct flock stdout_lock;
+
+	fpout = fdopen(output.fd, "w");
+	if (fpout == NULL) {
+		sh_error("%s", strerror(errno));
+		return 2;
+	}
 
 	//setprogname(argv[0]);
 	//(void)setlocale(LC_ALL, "");
